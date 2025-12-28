@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý công việc - TodoList</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container mt-5">
+    <!-- Auth Section -->
+    <div id="auth-section" class="auth-section card shadow-lg p-4 rounded-4">
+      <div class="app-title text-center mb-4">
+        <h1 class="h3 fw-bold text-primary"><i class="fas fa-tasks me-2"></i>QUẢN LÝ CÔNG VIỆC</h1>
+        <p class="text-muted">Đăng nhập để quản lý công việc hiệu quả</p>
+      </div>
+      <div class="form-container">
+        <ul class="nav nav-pills justify-content-center mb-4" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="login-tab" data-bs-toggle="pill" href="#login-form" role="tab">Đăng nhập</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="register-tab" data-bs-toggle="pill" href="#register-form" role="tab">Đăng ký</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="login-form" role="tabpanel">
+            <form id="login-form-el">
+              <div class="mb-3">
+                <label for="login-username" class="form-label fw-semibold">Tên đăng nhập</label>
+                <input type="text" id="login-username" name="username" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label for="login-password" class="form-label fw-semibold">Mật khẩu</label>
+                <input type="password" id="login-password" name="password" class="form-control" required />
+              </div>
+              <button type="submit" class="btn btn-primary w-100 fw-semibold">Đăng nhập</button>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="register-form" role="tabpanel">
+            <form id="register-form-el">
+              <div class="mb-3">
+                <label for="register-fullname" class="form-label fw-semibold">Họ và tên</label>
+                <input type="text" id="register-fullname" name="fullName" class="form-control" />
+              </div>
+              <div class="mb-3">
+                <label for="register-username" class="form-label fw-semibold">Tên đăng nhập</label>
+                <input type="text" id="register-username" name="username" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label for="register-email" class="form-label fw-semibold">Email</label>
+                <input type="email" id="register-email" name="email" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label for="register-password" class="form-label fw-semibold">Mật khẩu</label>
+                <input type="password" id="register-password" name="password" class="form-control" required />
+              </div>
+              <button type="submit" class="btn btn-primary w-100 fw-semibold">Đăng ký</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Section -->
+    <div id="app-section" class="app-section card shadow-lg p-4 rounded-4 hidden">
+      <header class="app-header d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4 fw-bold text-primary">QUẢN LÝ CÔNG VIỆC</h1>
+        <div class="user-info d-flex align-items-center">
+          <span id="username-display" class="me-3 fw-semibold text-dark"></span>
+          <button id="logout-btn" class="btn btn-warning btn-sm fw-semibold">Đăng xuất</button>
+        </div>
+      </header>
+      <div class="row">
+        <aside class="col-lg-3 col-md-4 sidebar bg-light p-3 rounded-3">
+          <div class="filter-section mb-4">
+            <h3 class="h6 fw-bold">Lọc công việc</h3>
+            <ul class="filter-list list-unstyled">
+              <li class="active p-2 rounded" data-filter="all">Tất cả công việc</li>
+              <li class="p-2 rounded" data-filter="pending">Chưa hoàn thành</li>
+              <li class="p-2 rounded" data-filter="completed">Đã hoàn thành</li>
+            </ul>
+          </div>
+          <div class="category-section mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h3 class="h6 fw-bold">Danh mục</h3>
+              <button id="add-category-btn" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus"></i></button>
+            </div>
+            <ul id="category-list" class="category-list list-unstyled"></ul>
+          </div>
+          <div class="priority-section">
+            <h3 class="h6 fw-bold">Mức độ ưu tiên</h3>
+            <ul class="priority-list list-unstyled">
+              <li class="p-2 rounded" data-priority="HIGH"><span class="priority-dot high"></span> Cao</li>
+              <li class="p-2 rounded" data-priority="MEDIUM"><span class="priority-dot medium"></span> Trung bình</li>
+              <li class="p-2 rounded" data-priority="LOW"><span class="priority-dot low"></span> Thấp</li>
+            </ul>
+          </div>
+        </aside>
+        <main class="col-lg-9 col-md-8 content">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="input-group w-50">
+              <input type="text" id="search-input" class="form-control" placeholder="Tìm kiếm công việc..." />
+              <button id="search-btn" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
+            </div>
+            <button id="add-todo-btn" class="btn btn-primary"><i class="fas fa-plus"></i> Thêm công việc</button>
+          </div>
+          <div id="todos-container" class="todos-container"></div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Todo Modal -->
+  <div class="modal fade" id="todo-modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header border-0">
+          <h2 id="modal-title" class="modal-title h5 fw-bold">Thêm công việc mới</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="todo-form">
+            <input type="hidden" id="todo-id" />
+            <div class="mb-3">
+              <label for="todo-title" class="form-label fw-semibold">Tiêu đề</label>
+              <input type="text" id="todo-title" name="title" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="todo-description" class="form-label fw-semibold">Mô tả</label>
+              <textarea id="todo-description" name="description" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="todo-due-date" class="form-label fw-semibold">Hạn hoàn thành</label>
+              <input type="datetime-local" id="todo-due-date" name="dueDate" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="todo-priority" class="form-label fw-semibold">Mức độ ưu tiên</label>
+              <select id="todo-priority" name="priorityLevel" class="form-select">
+                <option value="LOW">Thấp</option>
+                <option value="MEDIUM" selected>Trung bình</option>
+                <option value="HIGH">Cao</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Danh mục</label>
+              <div id="todo-categories" class="checkbox-group"></div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 fw-semibold">Lưu</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Modal -->
+  <div class="modal fade" id="category-modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header border-0">
+          <h2 id="category-modal-title" class="modal-title h5 fw-bold">Thêm danh mục mới</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="category-form">
+            <input type="hidden" id="category-id" />
+            <div class="mb-3">
+              <label for="category-name" class="form-label fw-semibold">Tên danh mục</label>
+              <input type="text" id="category-name" name="name" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="category-color" class="form-label fw-semibold">Màu sắc</label>
+              <input type="color" id="category-color" name="color" class="form-control" value="#3498db" />
+            </div>
+            <button type="submit" class="btn btn-primary w-100 fw-semibold">Lưu</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal fade" id="confirm-modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header border-0">
+          <h2 id="confirm-title" class="modal-title h5 fw-bold">Xác nhận</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p id="confirm-message">Bạn có chắc chắn muốn thực hiện hành động này?</p>
+          <div class="d-flex justify-content-end gap-2">
+            <button id="confirm-cancel" class="btn btn-secondary">Hủy</button>
+            <button id="confirm-ok" class="btn btn-danger">Xác nhận</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Toast -->
+  <div id="toast" class="toast align-items-center text-white border-0" role="alert" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="auth.js"></script>
+  <script src="todo.js"></script>
+</body>
+</html>
